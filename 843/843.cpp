@@ -2,10 +2,20 @@
 #include <string>
 #include <vector>
 #include <cstdio>
+#include <algorithm>
 
 static const unsigned int ALPHABET_LEN = 26;
 
 using namespace std;
+
+class StrCmp
+{
+public:
+    bool operator()(const string& lhs, const string& rhs)
+    {
+        return lhs.size() > rhs.size();
+    }
+};
 
 void split_by_space(const string& line, vector<string>& words)
 {
@@ -20,7 +30,7 @@ void split_by_space(const string& line, vector<string>& words)
     }
 
     if(begin_pos < line.size())
-        words.push_back(line.substr(begin_pos, line.length() - begin_pos));
+        words.push_back(line.substr(begin_pos, line.size() - begin_pos));
 }
 
 void decrypt(const vector<string>& dict, const vector<string>& words
@@ -34,14 +44,18 @@ void decrypt(const vector<string>& dict, const vector<string>& words
 
     for(size_t i = 0; i < dict.size(); ++i)
     {
-        if(words[index].size() != dict[i].size())
+        size_t word_len = words[index].size();
+        size_t d_word_len = dict[i].size();
+        if(word_len > d_word_len)
+            break;
+        else if(word_len < d_word_len)
             continue;
 
         const string& word = words[index];
         const string& d_word = dict[i];
         string ab1_bak(alpha_b1), ab2_bak(alpha_b2);
         bool match = true;
-        for(size_t j = 0; j < word.size(); ++j)
+        for(size_t j = 0; j < word_len; ++j)
         {
             if(ab1_bak[d_word[j] - 'a'] == '0'
                     && ab2_bak[word[j] - 'a'] == '0')
@@ -89,6 +103,7 @@ int main()
         getline(cin, tmp);
         dict.push_back(tmp);
     }
+    sort(dict.begin(), dict.end(), StrCmp());
 
     string line;
     while(getline(cin, line))
@@ -99,6 +114,7 @@ int main()
 
         vector<string> words;
         split_by_space(line, words);
+        sort(words.begin(), words.end(), StrCmp());
         decrypt(dict, words, 0, alpha_b1, alpha_b2, find);
 
         for(size_t i = 0; i < line.size(); ++i)
