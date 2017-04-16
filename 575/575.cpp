@@ -11,7 +11,7 @@ int main()
         auto len = str.length();
         
         for(auto i = 0; i < len; ++i)
-            sum += (pow(2, len - i) - 1) * (str[i] - '0');
+            sum += ((1 << (len - i)) - 1) * (str[i] - '0');
         
         return sum;
     };
