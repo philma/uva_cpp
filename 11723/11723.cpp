@@ -10,21 +10,16 @@ int main()
             && r && n)
     {
         ++t;
-        int x = r / n;
-        int tmp = r % n;
-        int ans = 0;
-        if(x < 27 || (x == 27 && tmp == 0))
-            ans = tmp ? x : x - 1;
-        else
-            ans = -1;
-
         cout << "Case "
              << t
              << ": ";
-        if(ans == -1)
-            cout << "impossible";
+
+        int x = r / n;
+        int tmp = r % n;
+        if(x < 27 || (x == 27 && tmp == 0))
+            cout << (tmp ? x : x - 1);
         else
-            cout << ans;
+            cout << "impossible";
         cout << endl;
     }
 
